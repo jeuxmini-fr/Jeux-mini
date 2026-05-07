@@ -471,12 +471,12 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 
   <div class="categories">
-    <button class="cat-btn active">Tous</button>
-    <button class="cat-btn">⚡ Action</button>
-    <button class="cat-btn">🧠 Réflexion</button>
-    <button class="cat-btn">⚽ Sport</button>
-    <button class="cat-btn">♟️ Stratégie</button>
-    <button class="cat-btn">😄 Casual</button>
+    <button class="cat-btn active" data-cat="tous">Tous</button>
+    <button class="cat-btn" data-cat="action">⚡ Action</button>
+    <button class="cat-btn" data-cat="reflexion">🧠 Réflexion</button>
+    <button class="cat-btn" data-cat="sport">⚽ Sport</button>
+    <button class="cat-btn" data-cat="strategie">♟️ Stratégie</button>
+    <button class="cat-btn" data-cat="casual">😄 Casual</button>
   </div>
 
   <!-- Game Modal -->
@@ -494,8 +494,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   <div class="games-grid" id="games-grid">
 
 ```
-<!-- VRAIS JEUX JOUABLES -->
-<div class="game-card" onclick="openGame('♟️ Échecs', 'https://playpager.com/embed/chess/index.html')">
+<div class="game-card" data-category="strategie" onclick="openGame('♟️ Échecs', 'https://playpager.com/embed/chess/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#0a0a2e,#1a1a6e);">♟️</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -505,7 +504,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🔴 Othello Reversi', 'https://playpager.com/embed/reversi/index.html')">
+<div class="game-card" data-category="strategie" onclick="openGame('🔴 Othello Reversi', 'https://playpager.com/embed/reversi/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a0a,#4a0000);">🔴</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -515,7 +514,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('⬜ Dames', 'https://playpager.com/embed/checkers/index.html')">
+<div class="game-card" data-category="strategie" onclick="openGame('⬜ Dames', 'https://playpager.com/embed/checkers/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a1a1a,#3a3a3a);">⬜</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -525,7 +524,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🔤 Mots Cachés', 'https://playpager.com/embed/wordpuzzle/index.html')">
+<div class="game-card" data-category="reflexion" onclick="openGame('🔤 Mots Cachés', 'https://playpager.com/embed/wordpuzzle/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a2e,#1a3a6e);">🔤</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -535,7 +534,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🟦 Cubes Tombants', 'https://playpager.com/embed/cubes/index.html')">
+<div class="game-card" data-category="casual" onclick="openGame('🟦 Cubes Tombants', 'https://playpager.com/embed/cubes/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#001a3a,#003a7a);">🟦</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -545,7 +544,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🃏 Solitaire', 'https://playpager.com/embed/solitaire/index.html')">
+<div class="game-card" data-category="casual" onclick="openGame('🃏 Solitaire', 'https://playpager.com/embed/solitaire/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a2e,#3a1a6e);">🃏</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -555,7 +554,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🔢 Sudoku', 'https://playpager.com/embed/sudoku/index.html')">
+<div class="game-card" data-category="reflexion" onclick="openGame('🔢 Sudoku', 'https://playpager.com/embed/sudoku/index.html')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a0a,#1a5a1a);">🔢</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -565,7 +564,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🏎️ Cars Arena', 'https://games.cdn.famobi.com/html5games/c/cars-arena/v010/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=bfca421b-0e9a-491b-8840-da277bda1aa4&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=920')">
+<div class="game-card" data-category="action" onclick="openGame('🏎️ Cars Arena', 'https://games.cdn.famobi.com/html5games/c/cars-arena/v010/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=bfca421b-0e9a-491b-8840-da277bda1aa4&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=920')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a0500,#4a1500);">🏎️</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -575,7 +574,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('💣 Démineur', 'https://idev.games/embed/minesweeper-classic')">
+<div class="game-card" data-category="reflexion" onclick="openGame('💣 Démineur', 'https://idev.games/embed/minesweeper-classic')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a1a0a,#3a3a1a);">💣</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -585,7 +584,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🧱 Casse-Briques', 'https://idev.games/embed/arcanoid-acuarium')">
+<div class="game-card" data-category="action" onclick="openGame('🧱 Casse-Briques', 'https://idev.games/embed/arcanoid-acuarium')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#001a1a,#004a4a);">🧱</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -595,7 +594,7 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🧟 Zombie Defense', 'https://idev.games/embed/zombie-tower-defense-z-sector')">
+<div class="game-card" data-category="strategie" onclick="openGame('🧟 Zombie Defense', 'https://idev.games/embed/zombie-tower-defense-z-sector')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a0a,#1a3a0a);">🧟</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
@@ -605,13 +604,93 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
   </div>
 </div>
 
-<div class="game-card" onclick="openGame('🧩 Domino Tiler', 'https://idev.games/embed/domino-tiler')">
+<div class="game-card" data-category="reflexion" onclick="openGame('🧩 Domino Tiler', 'https://idev.games/embed/domino-tiler')">
   <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a1a,#3a1a3a);">🧩</div>
   <button class="play-btn">▶ JOUER</button>
   <div class="game-info">
     <div class="game-name">Domino Tiler</div>
     <div class="game-desc">Place les dominos pour remplir la grille.</div>
     <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="action" onclick="openGame('🧛 Vampire Land', 'https://idev.games/embed/vampire-land')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#1a0005,#4a0015);">🧛</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Vampire Land</div>
+    <div class="game-desc">Survie dans un monde de vampires !</div>
+    <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="action" onclick="openGame('🏃 Horrible Platformer', 'https://idev.games/embed/horrible-platformer')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#1a1000,#3a2800);">🏃</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Horrible Platformer</div>
+    <div class="game-desc">Plateforme ultra difficile, vas jusqu'au bout !</div>
+    <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="sport" onclick="openGame('⚽ Penalty Shootout', 'https://www.htmlgames.com/uploaded/game/penalty-shootout/index.html')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a0a,#1a4a0a);">⚽</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Penalty Shootout</div>
+    <div class="game-desc">Tire les penalties et marque !</div>
+    <div class="game-meta"><span class="game-tag tag-sport">Sport</span><span class="game-rating">★★★★★</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="casual" onclick="openGame('🎯 2048', 'https://playpager.com/embed/2048/index.html')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#4a2000);">🎯</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">2048</div>
+    <div class="game-desc">Fusionne les tuiles pour atteindre 2048 !</div>
+    <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★★</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="reflexion" onclick="openGame('🎨 Nonogram', 'https://www.htmlgames.com/uploaded/game/nonogram/index.html')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#001a2a,#003a5a);">🎨</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Nonogram</div>
+    <div class="game-desc">Remplis la grille selon les indices pour révéler l'image.</div>
+    <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="casual" onclick="openGame('🫧 Bubble Shooter', 'https://www.htmlgames.com/uploaded/game/bubble-shooter-pro-2/index.html')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#001a3a,#00296e);">🫧</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Bubble Shooter</div>
+    <div class="game-desc">Explose les bulles de la même couleur !</div>
+    <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★★</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="reflexion" onclick="openGame('🔵 Mahjong', 'https://www.htmlgames.com/uploaded/game/mahjong-connect/index.html')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#3a1500);">🔵</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Mahjong Connect</div>
+    <div class="game-desc">Connecte les tuiles identiques pour les éliminer.</div>
+    <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
+  </div>
+</div>
+
+<div class="game-card" data-category="action" onclick="openGame('🐉 Dragon Slayer', 'https://idev.games/embed/orius-sombr-a-games-v9-1-beta')">
+  <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#4a1a00);">🐉</div>
+  <button class="play-btn">▶ JOUER</button>
+  <div class="game-info">
+    <div class="game-name">Dragon Slayer</div>
+    <div class="game-desc">Combat épique contre des monstres et dragons.</div>
+    <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
   </div>
 </div>
 ```
@@ -719,6 +798,14 @@ footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
     btn.addEventListener('click', () => {
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      const cat = btn.getAttribute('data-cat');
+      document.querySelectorAll('.game-card').forEach(card => {
+        if (cat === 'tous' || card.getAttribute('data-category') === cat) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     });
   });
 
