@@ -1,820 +1,1068 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jeuxmini — Mini-jeux pour ados</title>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>CINEROOL — Streaming Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --neon-blue: #00f0ff;
-    --neon-purple: #bf00ff;
-    --neon-pink: #ff006e;
-    --neon-green: #00ff88;
-    --bg: #060612;
-    --bg2: #0d0d2b;
-    --card: #11112a;
-    --text: #e8e8ff;
-    --muted: #6666aa;
+    --bg: #080b10;
+    --surface: #0f1318;
+    --surface2: #161c24;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8b84b;
+    --accent2: #c94040;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --card-w: 220px;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Custom cursor */
-  .cursor {
-    width: 12px; height: 12px;
-    background: var(--neon-blue);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.1s, background 0.2s;
-    mix-blend-mode: screen;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1.5px solid var(--neon-purple);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-    mix-blend-mode: screen;
-  }
-
-  /* Animated background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,240,255,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    z-index: 0;
-    animation: gridMove 20s linear infinite;
-  }
-  @keyframes gridMove {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-  }
-
-  /* Glowing orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
-    pointer-events: none;
-    z-index: 0;
-    animation: orbFloat 8s ease-in-out infinite;
-  }
-  .orb1 { width: 400px; height: 400px; background: var(--neon-purple); top: -100px; left: -100px; animation-delay: 0s; }
-  .orb2 { width: 300px; height: 300px; background: var(--neon-blue); bottom: 100px; right: -100px; animation-delay: -3s; }
-  .orb3 { width: 250px; height: 250px; background: var(--neon-pink); top: 50%; left: 50%; animation-delay: -6s; }
-  @keyframes orbFloat {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-30px) scale(1.1); }
-  }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 20px 40px;
-    display: flex; justify-content: space-between; align-items: center;
-    background: rgba(6,6,18,0.7);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0,240,255,0.1);
-  }
-  .logo {
-    font-family: 'Russo One', sans-serif;
-    font-size: 1.8rem;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-  }
-  .logo span { color: var(--neon-pink); -webkit-text-fill-color: var(--neon-pink); }
-  nav ul { display: flex; gap: 30px; list-style: none; }
-  nav ul a {
-    color: var(--muted); text-decoration: none;
-    font-size: 0.9rem; font-weight: 500; letter-spacing: 1px;
-    transition: color 0.2s;
-    text-transform: uppercase;
-  }
-  nav ul a:hover { color: var(--neon-blue); }
-  .nav-btn {
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    color: var(--bg) !important;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 700 !important;
-    -webkit-text-fill-color: var(--bg) !important;
-  }
-
-  /* HERO */
-  .hero {
-    position: relative; z-index: 1;
+    font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    text-align: center;
-    padding: 120px 40px 80px;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(0,240,255,0.08);
-    border: 1px solid rgba(0,240,255,0.2);
-    padding: 6px 16px; border-radius: 100px;
-    font-size: 0.8rem; color: var(--neon-blue);
-    letter-spacing: 2px; text-transform: uppercase;
-    margin-bottom: 24px;
-    animation: fadeDown 0.8s ease both;
-  }
-  .hero-badge::before {
-    content: ''; width: 6px; height: 6px;
-    background: var(--neon-green); border-radius: 50%;
-    animation: pulse 1.5s ease infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
-
-  h1 {
-    font-family: 'Russo One', sans-serif;
-    font-size: clamp(3rem, 8vw, 7rem);
-    line-height: 1;
-    margin-bottom: 16px;
-    animation: fadeDown 0.8s 0.2s ease both;
-  }
-  h1 .line1 { display: block; color: var(--text); }
-  h1 .line2 {
-    display: block;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    overflow-x: hidden;
   }
 
-  .hero-sub {
-    font-size: 1.15rem; color: var(--muted);
-    max-width: 500px; line-height: 1.7;
-    margin-bottom: 40px;
-    animation: fadeDown 0.8s 0.4s ease both;
-  }
+/* ── NAVBAR ── */
+nav {
+position: fixed; top:0; left:0; right:0; z-index:100;
+height: 64px;
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 40px;
+background: linear-gradient(to bottom, rgba(8,11,16,0.98), transparent);
+backdrop-filter: blur(8px);
+border-bottom: 1px solid var(–border);
+transition: background 0.3s;
+}
+.nav-logo {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 28px;
+letter-spacing: 3px;
+color: var(–accent);
+text-shadow: 0 0 30px rgba(232,184,75,0.4);
+cursor: pointer;
+}
+.nav-logo span { color: var(–accent2); }
+.nav-links {
+display: flex; gap: 28px; list-style: none;
+}
+.nav-links a {
+color: var(–muted); text-decoration: none;
+font-size: 14px; font-weight: 500;
+transition: color 0.2s;
+cursor: pointer;
+}
+.nav-links a:hover, .nav-links a.active { color: var(–text); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.search-bar {
+display: flex; align-items: center;
+background: var(–surface2);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 0 12px;
+gap: 8px;
+transition: border-color 0.2s, width 0.3s;
+width: 220px;
+}
+.search-bar:focus-within { border-color: var(–accent); width: 280px; }
+.search-bar input {
+background: transparent; border: none; outline: none;
+color: var(–text); font-family: inherit; font-size: 14px;
+padding: 8px 0; width: 100%;
+}
+.search-bar svg { color: var(–muted); flex-shrink:0; }
+.btn-profile {
+width: 36px; height: 36px; border-radius: 50%;
+background: linear-gradient(135deg, var(–accent), var(–accent2));
+border: 2px solid var(–accent);
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+font-weight: 700; font-size: 14px; color: var(–bg);
+}
 
-  .hero-buttons {
-    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-    animation: fadeDown 0.8s 0.6s ease both;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    color: #000; font-weight: 700; font-size: 1rem;
-    padding: 14px 32px; border-radius: 8px;
-    border: none; cursor: none; letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 30px rgba(0,240,255,0.3);
-  }
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 50px rgba(0,240,255,0.5);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--text); font-weight: 600; font-size: 1rem;
-    padding: 14px 32px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.15);
-    cursor: none; letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .btn-secondary:hover {
-    border-color: var(--neon-purple);
-    transform: translateY(-3px);
-  }
+/* ── HERO ── */
+#hero {
+position: relative;
+height: 85vh; min-height: 560px;
+display: flex; align-items: flex-end;
+padding: 0 60px 80px;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute; inset: 0;
+background: linear-gradient(135deg, #0a0f1a 0%, #1a0a0a 50%, #0a1020 100%);
+}
+.hero-bg::before {
+content: ‘’;
+position: absolute; inset: 0;
+background:
+radial-gradient(ellipse at 60% 40%, rgba(201,64,64,0.15) 0%, transparent 60%),
+radial-gradient(ellipse at 20% 70%, rgba(232,184,75,0.1) 0%, transparent 50%);
+}
+.hero-bg-img {
+position: absolute; inset: 0;
+background-size: cover; background-position: center top;
+opacity: 0.35;
+transition: opacity 0.8s, background-image 0.01s;
+}
+.hero-gradient {
+position: absolute; inset: 0;
+background: linear-gradient(
+to right, rgba(8,11,16,0.95) 0%, rgba(8,11,16,0.6) 50%, rgba(8,11,16,0.1) 100%
+),
+linear-gradient(to top, rgba(8,11,16,1) 0%, transparent 40%);
+}
+.hero-content { position: relative; z-index:2; max-width: 600px; }
+.hero-badge {
+display: inline-block;
+background: var(–accent2); color: white;
+font-size: 10px; font-weight: 700; letter-spacing: 2px;
+padding: 4px 10px; border-radius: 4px; margin-bottom: 16px;
+text-transform: uppercase;
+}
+.hero-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(48px, 7vw, 88px);
+line-height: 0.95;
+letter-spacing: 2px;
+color: white;
+text-shadow: 0 4px 40px rgba(0,0,0,0.8);
+margin-bottom: 16px;
+}
+.hero-meta {
+display: flex; align-items: center; gap: 12px;
+font-size: 13px; color: var(–muted); margin-bottom: 16px;
+}
+.hero-meta .rating { color: var(–accent); font-weight: 600; }
+.hero-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(–muted); }
+.hero-desc {
+font-size: 15px; line-height: 1.7; color: rgba(232,234,240,0.8);
+margin-bottom: 28px; max-width: 480px;
+}
+.hero-actions { display: flex; gap: 12px; }
+.btn-play {
+display: flex; align-items: center; gap: 10px;
+background: var(–accent); color: var(–bg);
+border: none; border-radius: 10px;
+padding: 14px 28px; font-family: inherit;
+font-size: 15px; font-weight: 700; cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+box-shadow: 0 0 30px rgba(232,184,75,0.3);
+}
+.btn-play:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(232,184,75,0.5); }
+.btn-info {
+display: flex; align-items: center; gap: 10px;
+background: rgba(255,255,255,0.1); color: white;
+border: 1px solid rgba(255,255,255,0.2); border-radius: 10px;
+padding: 14px 24px; font-family: inherit;
+font-size: 15px; font-weight: 500; cursor: pointer;
+backdrop-filter: blur(10px);
+transition: background 0.2s;
+}
+.btn-info:hover { background: rgba(255,255,255,0.18); }
 
-  .hero-stats {
-    display: flex; gap: 50px; margin-top: 60px;
-    animation: fadeDown 0.8s 0.8s ease both;
-  }
-  .stat { text-align: center; }
-  .stat-num {
-    font-family: 'Russo One', sans-serif;
-    font-size: 2rem;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .stat-label { font-size: 0.8rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+/* ── MAIN CONTENT ── */
+main { padding: 0 40px 80px; }
 
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ── GENRE FILTER ── */
+.genre-bar {
+display: flex; gap: 8px; margin: 40px 0 32px;
+overflow-x: auto; padding-bottom: 4px;
+scrollbar-width: none;
+}
+.genre-bar::-webkit-scrollbar { display: none; }
+.genre-pill {
+flex-shrink: 0;
+padding: 8px 18px; border-radius: 20px;
+font-size: 13px; font-weight: 500;
+background: var(–surface2); color: var(–muted);
+border: 1px solid var(–border);
+cursor: pointer; transition: all 0.2s;
+white-space: nowrap;
+}
+.genre-pill:hover { border-color: var(–accent); color: var(–accent); }
+.genre-pill.active {
+background: var(–accent); color: var(–bg);
+border-color: var(–accent); font-weight: 700;
+}
 
-  /* SECTION TITLES */
-  .section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
-  .section-header { margin-bottom: 50px; }
-  .section-tag {
-    font-size: 0.75rem; color: var(--neon-blue);
-    letter-spacing: 3px; text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .section-title {
-    font-family: 'Russo One', sans-serif;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    color: var(--text);
-  }
-  .section-title span {
-    background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* ── SECTION ── */
+.section { margin-bottom: 52px; }
+.section-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 20px;
+}
+.section-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 22px; letter-spacing: 2px;
+color: var(–text);
+}
+.section-title span { color: var(–accent); }
+.see-all {
+font-size: 13px; color: var(–muted);
+cursor: pointer; transition: color 0.2s;
+display: flex; align-items: center; gap: 4px;
+}
+.see-all:hover { color: var(–accent); }
 
-  /* CATEGORIES */
-  .categories {
-    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px;
-  }
-  .cat-btn {
-    padding: 8px 20px; border-radius: 100px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: transparent; color: var(--muted);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.85rem; cursor: none;
-    transition: all 0.2s; letter-spacing: 0.5px;
-  }
-  .cat-btn.active, .cat-btn:hover {
-    background: rgba(0,240,255,0.1);
-    border-color: var(--neon-blue);
-    color: var(--neon-blue);
-  }
+/* ── CARDS ── */
+.cards-row {
+display: flex; gap: 16px;
+overflow-x: auto; padding-bottom: 8px;
+scrollbar-width: thin; scrollbar-color: var(–surface2) transparent;
+}
+.card {
+flex-shrink: 0;
+width: var(–card-w);
+border-radius: 12px;
+overflow: hidden;
+cursor: pointer;
+background: var(–surface2);
+border: 1px solid var(–border);
+transition: transform 0.25s, box-shadow 0.25s;
+position: relative;
+}
+.card:hover {
+transform: scale(1.05) translateY(-4px);
+box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+z-index: 5;
+border-color: rgba(232,184,75,0.3);
+}
+.card-poster {
+width: 100%; aspect-ratio: 2/3;
+background-size: cover; background-position: center;
+position: relative;
+}
+.card-overlay {
+position: absolute; inset: 0;
+background: linear-gradient(to top, rgba(8,11,16,0.95) 0%, transparent 50%);
+opacity: 0; transition: opacity 0.3s;
+display: flex; align-items: flex-end; padding: 12px;
+}
+.card:hover .card-overlay { opacity: 1; }
+.card-play-btn {
+width: 40px; height: 40px; border-radius: 50%;
+background: var(–accent); display: flex; align-items: center; justify-content: center;
+color: var(–bg); margin-left: auto;
+transform: translateY(8px); transition: transform 0.3s;
+box-shadow: 0 4px 20px rgba(232,184,75,0.5);
+}
+.card:hover .card-play-btn { transform: translateY(0); }
+.card-type-badge {
+position: absolute; top: 10px; left: 10px;
+background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 4px; padding: 2px 7px;
+font-size: 10px; font-weight: 700; letter-spacing: 1px;
+color: var(–accent); text-transform: uppercase;
+}
+.card-info { padding: 12px; }
+.card-title {
+font-size: 13px; font-weight: 600; color: var(–text);
+white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+margin-bottom: 4px;
+}
+.card-sub {
+font-size: 11px; color: var(–muted);
+display: flex; align-items: center; gap: 6px;
+}
+.card-rating { color: var(–accent); font-weight: 600; }
 
-  /* GAMES GRID */
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-  }
-  .game-card {
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px; overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    position: relative;
-  }
-  .game-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(0,240,255,0.3);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,240,255,0.1);
-  }
-  .game-thumb {
-    width: 100%; height: 160px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 4rem; position: relative; overflow: hidden;
-  }
-  .game-thumb::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 50%, var(--card));
-  }
-  .game-info { padding: 16px; }
-  .game-name {
-    font-weight: 700; font-size: 1rem; margin-bottom: 6px;
-    color: var(--text);
-  }
-  .game-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
-  .game-meta {
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .game-tag {
-    font-size: 0.72rem; padding: 3px 10px; border-radius: 100px;
-    font-weight: 600; letter-spacing: 0.5px;
-  }
-  .tag-action { background: rgba(255,0,110,0.15); color: var(--neon-pink); }
-  .tag-puzzle { background: rgba(0,240,255,0.12); color: var(--neon-blue); }
-  .tag-sport { background: rgba(0,255,136,0.12); color: var(--neon-green); }
-  .tag-strat { background: rgba(191,0,255,0.12); color: var(--neon-purple); }
-  .tag-casual { background: rgba(255,165,0,0.12); color: #ffaa00; }
+/* ── MODAL PLAYER ── */
+#modal-overlay {
+position: fixed; inset: 0; z-index: 200;
+background: rgba(0,0,0,0.92);
+backdrop-filter: blur(6px);
+display: none; align-items: center; justify-content: center;
+padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+.modal-box {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 16px;
+width: 100%; max-width: 900px;
+overflow: hidden;
+animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+from { opacity:0; transform: scale(0.95) translateY(20px); }
+to { opacity:1; transform: scale(1) translateY(0); }
+}
+.modal-player {
+width: 100%; aspect-ratio: 16/9;
+background: #000; position: relative;
+overflow: hidden;
+}
+.modal-player iframe {
+width: 100%; height: 100%; border: none;
+}
+.modal-player-placeholder {
+position: absolute; inset: 0;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+gap: 16px;
+background: linear-gradient(135deg, #0a0f1a, #12090a);
+}
+.modal-player-placeholder .big-play {
+width: 72px; height: 72px; border-radius: 50%;
+background: var(–accent);
+display: flex; align-items: center; justify-content: center;
+cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+box-shadow: 0 0 40px rgba(232,184,75,0.4);
+}
+.modal-player-placeholder .big-play:hover {
+transform: scale(1.1); box-shadow: 0 0 60px rgba(232,184,75,0.6);
+}
+.modal-player-placeholder p { color: var(–muted); font-size: 14px; }
+.modal-body { padding: 24px 28px; }
+.modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.modal-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 32px; letter-spacing: 2px; color: white; }
+.modal-close {
+width: 36px; height: 36px; border-radius: 50%;
+background: var(–surface2); border: 1px solid var(–border);
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+color: var(–muted); transition: all 0.2s; flex-shrink:0; margin-left: 12px;
+}
+.modal-close:hover { background: var(–accent2); color: white; border-color: var(–accent2); }
+.modal-meta {
+display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+font-size: 13px;
+}
+.modal-tag {
+padding: 4px 12px; border-radius: 6px;
+background: var(–surface2); border: 1px solid var(–border);
+color: var(–muted);
+}
+.modal-tag.highlight { border-color: var(–accent); color: var(–accent); }
+.modal-desc { font-size: 14px; line-height: 1.7; color: rgba(232,234,240,0.75); }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.modal-btn-play {
+display: flex; align-items: center; gap: 8px;
+background: var(–accent); color: var(–bg);
+border: none; border-radius: 8px;
+padding: 11px 22px; font-family: inherit;
+font-size: 14px; font-weight: 700; cursor: pointer;
+transition: transform 0.2s;
+}
+.modal-btn-play:hover { transform: translateY(-1px); }
+.modal-btn-add {
+display: flex; align-items: center; gap: 8px;
+background: var(–surface2); color: var(–text);
+border: 1px solid var(–border); border-radius: 8px;
+padding: 11px 22px; font-family: inherit;
+font-size: 14px; font-weight: 500; cursor: pointer;
+transition: border-color 0.2s;
+}
+.modal-btn-add:hover { border-color: var(–accent); color: var(–accent); }
 
-  .game-rating { font-size: 0.8rem; color: #ffaa00; }
-  .play-btn {
-    position: absolute; top: 12px; right: 12px;
-    background: rgba(0,240,255,0.15);
-    border: 1px solid rgba(0,240,255,0.3);
-    color: var(--neon-blue); border-radius: 8px;
-    padding: 6px 12px; font-size: 0.75rem; font-weight: 700;
-    cursor: none; opacity: 0; transition: opacity 0.2s;
-    font-family: 'Space Grotesk', sans-serif;
-    letter-spacing: 1px;
-  }
-  .game-card:hover .play-btn { opacity: 1; }
+/* ── EPISODES (séries) ── */
+.modal-episodes { margin-top: 20px; border-top: 1px solid var(–border); padding-top: 20px; }
+.modal-episodes h4 {
+font-family: ‘Bebas Neue’, sans-serif; font-size: 18px; letter-spacing: 1px;
+margin-bottom: 12px; color: var(–text);
+}
+.season-select {
+background: var(–surface2); border: 1px solid var(–border);
+color: var(–text); border-radius: 6px;
+padding: 6px 12px; font-family: inherit; font-size: 13px;
+margin-bottom: 14px; cursor: pointer; outline: none;
+}
+.season-select:focus { border-color: var(–accent); }
+.ep-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+.ep-item {
+display: flex; align-items: center; gap: 14px;
+padding: 10px 14px; border-radius: 8px;
+background: var(–surface2); border: 1px solid var(–border);
+cursor: pointer; transition: border-color 0.2s;
+}
+.ep-item:hover { border-color: var(–accent); }
+.ep-num {
+width: 28px; height: 28px; border-radius: 50%;
+background: var(–surface); border: 1px solid var(–border);
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; font-weight: 700; color: var(–muted); flex-shrink: 0;
+}
+.ep-info { flex: 1; }
+.ep-title { font-size: 13px; font-weight: 600; color: var(–text); }
+.ep-dur { font-size: 11px; color: var(–muted); }
+.ep-play {
+width: 32px; height: 32px; border-radius: 50%;
+background: var(–accent); display: flex; align-items: center; justify-content: center;
+color: var(–bg); flex-shrink: 0;
+transition: transform 0.2s;
+}
+.ep-item:hover .ep-play { transform: scale(1.1); }
 
-  /* FEATURED */
-  .featured-card {
-    grid-column: span 2;
-    background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(191,0,255,0.08));
-    border: 1px solid rgba(0,240,255,0.2);
-    border-radius: 20px;
-    padding: 40px;
-    display: flex; align-items: center; gap: 40px;
-    position: relative; overflow: hidden;
-  }
-  .featured-card::before {
-    content: '';
-    position: absolute; top: -50%; right: -10%;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .featured-emoji { font-size: 6rem; flex-shrink: 0; }
-  .featured-badge {
-    font-size: 0.7rem; color: var(--neon-blue);
-    background: rgba(0,240,255,0.1);
-    border: 1px solid rgba(0,240,255,0.2);
-    padding: 3px 10px; border-radius: 100px;
-    display: inline-block; margin-bottom: 10px;
-    letter-spacing: 2px; text-transform: uppercase;
-  }
-  .featured-title {
-    font-family: 'Russo One', sans-serif;
-    font-size: 2rem; margin-bottom: 10px;
-  }
-  .featured-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+/* ── NO RESULTS ── */
+.no-results {
+text-align: center; padding: 60px 20px; color: var(–muted);
+display: none;
+}
+.no-results svg { opacity: 0.3; margin-bottom: 16px; }
+.no-results p { font-size: 16px; }
 
-  /* LEADERBOARD */
-  .leaderboard {
-    background: var(--card);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px; overflow: hidden;
-  }
-  .lb-header {
-    padding: 24px 30px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .lb-title {
-    font-family: 'Russo One', sans-serif;
-    font-size: 1.2rem;
-  }
-  .lb-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 16px 30px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    transition: background 0.2s;
-  }
-  .lb-row:hover { background: rgba(255,255,255,0.02); }
-  .lb-rank {
-    font-family: 'Russo One', sans-serif;
-    font-size: 1rem; width: 30px; text-align: center;
-  }
-  .rank-1 { color: #ffd700; }
-  .rank-2 { color: #c0c0c0; }
-  .rank-3 { color: #cd7f32; }
-  .lb-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; flex-shrink: 0;
-  }
-  .lb-name { flex: 1; font-weight: 600; font-size: 0.95rem; }
-  .lb-game { font-size: 0.8rem; color: var(--muted); }
-  .lb-score {
-    font-family: 'Russo One', sans-serif;
-    font-size: 1rem;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* ── FOOTER ── */
+footer {
+border-top: 1px solid var(–border);
+padding: 32px 40px;
+display: flex; align-items: center; justify-content: space-between;
+color: var(–muted); font-size: 13px;
+}
+.footer-logo {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 20px; letter-spacing: 3px; color: var(–accent);
+}
 
-  /* FOOTER */
-  footer {
-    position: relative; z-index: 1;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 40px;
-    text-align: center;
-    color: var(--muted); font-size: 0.85rem;
-  }
-  footer .logo { display: inline-block; margin-bottom: 10px; font-size: 1.4rem; }
-  .footer-links { display: flex; gap: 24px; justify-content: center; margin: 16px 0; }
-  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--neon-blue); }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(–surface2); border-radius: 3px; }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+@media (max-width: 768px) {
+nav { padding: 0 16px; }
+.nav-links { display: none; }
+#hero { padding: 0 20px 60px; }
+main { padding: 0 16px 60px; }
+.search-bar { width: 160px; }
+.search-bar:focus-within { width: 190px; }
+footer { flex-direction: column; gap: 12px; text-align: center; }
+}
 </style>
+
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+<!-- NAVBAR -->
 
-<!-- NAV -->
 <nav>
-  <div class="logo">JEUX<span>mini</span></div>
-  <ul>
-    <li><a href="#">Accueil</a></li>
-    <li><a href="#">Jeux</a></li>
-    <li><a href="#">Classement</a></li>
-    <li><a href="#" class="nav-btn">Jouer</a></li>
+  <div class="nav-logo" onclick="resetFilters()">CINE<span>ROOL</span></div>
+  <ul class="nav-links">
+    <li><a class="active" onclick="filterGenre('Tous')">Accueil</a></li>
+    <li><a onclick="filterGenre('Film')">Films</a></li>
+    <li><a onclick="filterGenre('Série')">Séries</a></li>
+    <li><a onclick="filterGenre('Action')">Action</a></li>
+    <li><a onclick="filterGenre('Science-Fiction')">Sci-Fi</a></li>
   </ul>
+  <div class="nav-right">
+    <div class="search-bar">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Rechercher..." oninput="handleSearch(this.value)">
+    </div>
+    <div class="btn-profile">U</div>
+  </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">🎮 Nouveau — 50+ jeux disponibles</div>
-  <h1>
-    <span class="line1">La plateforme</span>
-    <span class="line2">mini-jeux</span>
-  </h1>
-  <p class="hero-sub">Des centaines de mini-jeux gratuits, en français, pour les ados. Défie tes amis et grimpe au classement !</p>
-  <div class="hero-buttons">
-    <button class="btn-primary">🚀 Jouer maintenant</button>
-    <button class="btn-secondary">🏆 Voir le classement</button>
+
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-img" id="hero-bg-img"></div>
+    <div class="hero-gradient"></div>
   </div>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">50+</div>
-      <div class="stat-label">Jeux</div>
+  <div class="hero-content">
+    <div class="hero-badge" id="hero-badge">★ EN VEDETTE</div>
+    <h1 class="hero-title" id="hero-title">DUNE</h1>
+    <div class="hero-meta">
+      <span class="rating" id="hero-rating">★ 8.0</span>
+      <span class="dot"></span>
+      <span id="hero-year">2021</span>
+      <span class="dot"></span>
+      <span id="hero-genre">Sci-Fi · Épopée</span>
+      <span class="dot"></span>
+      <span id="hero-duration">2h 35min</span>
     </div>
-    <div class="stat">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">Gratuit</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">🇫🇷</div>
-      <div class="stat-label">En français</div>
+    <p class="hero-desc" id="hero-desc">Paul Atreides, un jeune homme brillant né avec une grande destinée, doit se rendre sur la planète la plus dangereuse de l'univers pour assurer l'avenir de sa famille et de son peuple.</p>
+    <div class="hero-actions">
+      <button class="btn-play" id="hero-play-btn" onclick="openModal(0)">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        Regarder
+      </button>
+      <button class="btn-info" id="hero-info-btn" onclick="openModal(0)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Plus d'infos
+      </button>
     </div>
   </div>
 </section>
 
-<!-- GAMES -->
-<div class="section">
-  <div class="section-header">
-    <div class="section-tag">// catalogue</div>
-    <h2 class="section-title">Jeux <span>populaires</span></h2>
+<!-- MAIN -->
+
+<main>
+  <!-- Genre Bar -->
+  <div class="genre-bar" id="genre-bar">
+    <div class="genre-pill active" onclick="filterGenre('Tous')">Tous</div>
+    <div class="genre-pill" onclick="filterGenre('Film')">Films</div>
+    <div class="genre-pill" onclick="filterGenre('Série')">Séries</div>
+    <div class="genre-pill" onclick="filterGenre('Action')">Action</div>
+    <div class="genre-pill" onclick="filterGenre('Thriller')">Thriller</div>
+    <div class="genre-pill" onclick="filterGenre('Science-Fiction')">Science-Fiction</div>
+    <div class="genre-pill" onclick="filterGenre('Drame')">Drame</div>
+    <div class="genre-pill" onclick="filterGenre('Aventure')">Aventure</div>
+    <div class="genre-pill" onclick="filterGenre('Crime')">Crime</div>
+    <div class="genre-pill" onclick="filterGenre('Horreur')">Horreur</div>
+    <div class="genre-pill" onclick="filterGenre('Animation')">Animation</div>
   </div>
 
-  <div class="categories">
-    <button class="cat-btn active" data-cat="tous">Tous</button>
-    <button class="cat-btn" data-cat="action">⚡ Action</button>
-    <button class="cat-btn" data-cat="reflexion">🧠 Réflexion</button>
-    <button class="cat-btn" data-cat="sport">⚽ Sport</button>
-    <button class="cat-btn" data-cat="strategie">♟️ Stratégie</button>
-    <button class="cat-btn" data-cat="casual">😄 Casual</button>
+  <!-- No results -->
+
+  <div class="no-results" id="no-results">
+    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <p>Aucun résultat trouvé</p>
   </div>
 
-  <!-- Game Modal -->
-  <div id="game-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1000; flex-direction:column; align-items:center; justify-content:center;">
-    <div style="width:90%; max-width:900px; position:relative;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <div id="modal-title" style="font-family:'Russo One',sans-serif; font-size:1.4rem; color:var(--neon-blue);"></div>
-        <button onclick="closeGame()" style="background:rgba(255,0,110,0.2); border:1px solid var(--neon-pink); color:var(--neon-pink); padding:8px 16px; border-radius:8px; cursor:pointer; font-family:'Space Grotesk',sans-serif; font-weight:700;">✕ Fermer</button>
-      </div>
-      <iframe id="game-iframe" src="" width="100%" height="550px" frameborder="0" allowfullscreen style="border-radius:16px; border:1px solid rgba(0,240,255,0.2);"></iframe>
-    </div>
-  </div>
+  <!-- Sections dynamiques -->
 
-  <div class="games-grid" id="games-grid">
+  <div id="sections-container"></div>
+</main>
 
-    <div class="game-card" data-category="strategie" onclick="openGame('♟️ Échecs', 'https://playpager.com/embed/chess/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#0a0a2e,#1a1a6e);">♟️</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Échecs</div>
-        <div class="game-desc">Affronte l'ordinateur dans ce grand classique.</div>
-        <div class="game-meta"><span class="game-tag tag-strat">Stratégie</span><span class="game-rating">★★★★★</span></div>
+<!-- MODAL PLAYER -->
+
+<div id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-player" id="modal-player">
+      <div class="modal-player-placeholder" id="player-placeholder">
+        <div class="big-play" onclick="startPlay()">
+          <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <p id="player-msg">Cliquez pour lancer la lecture</p>
       </div>
     </div>
-
-    <div class="game-card" data-category="strategie" onclick="openGame('🔴 Othello Reversi', 'https://playpager.com/embed/reversi/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a0a,#4a0000);">🔴</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Othello Reversi</div>
-        <div class="game-desc">Retourne les pions et domine le plateau.</div>
-        <div class="game-meta"><span class="game-tag tag-strat">Stratégie</span><span class="game-rating">★★★★☆</span></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">DUNE</div>
+        <div class="modal-close" onclick="closeModal()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </div>
       </div>
-    </div>
-
-    <div class="game-card" data-category="strategie" onclick="openGame('⬜ Dames', 'https://playpager.com/embed/checkers/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a1a1a,#3a3a3a);">⬜</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Dames</div>
-        <div class="game-desc">Le jeu de dames classique contre l'IA.</div>
-        <div class="game-meta"><span class="game-tag tag-strat">Stratégie</span><span class="game-rating">★★★★☆</span></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-actions">
+        <button class="modal-btn-play" onclick="startPlay()">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          Lecture
+        </button>
+        <button class="modal-btn-add" id="btn-add-watchlist">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Ma liste
+        </button>
       </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('🔤 Mots Cachés', 'https://playpager.com/embed/wordpuzzle/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a2e,#1a3a6e);">🔤</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Mots Cachés</div>
-        <div class="game-desc">Trouve tous les mots cachés dans la grille.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★★</span></div>
+      <div class="modal-episodes" id="modal-episodes" style="display:none">
+        <h4>ÉPISODES</h4>
+        <select class="season-select" id="season-select" onchange="renderEpisodes()"></select>
+        <div class="ep-list" id="ep-list"></div>
       </div>
-    </div>
-
-    <div class="game-card" data-category="casual" onclick="openGame('🟦 Cubes Tombants', 'https://playpager.com/embed/cubes/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#001a3a,#003a7a);">🟦</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Cubes Tombants</div>
-        <div class="game-desc">Empile les cubes et ne les laisse pas déborder !</div>
-        <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="casual" onclick="openGame('🃏 Solitaire', 'https://playpager.com/embed/solitaire/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a2e,#3a1a6e);">🃏</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Solitaire</div>
-        <div class="game-desc">Le classique jeu de cartes solitaire.</div>
-        <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('🔢 Sudoku', 'https://playpager.com/embed/sudoku/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#0a2a0a,#1a5a1a);">🔢</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Sudoku</div>
-        <div class="game-desc">Remplis la grille avec les bons chiffres.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="action" onclick="openGame('🏎️ Cars Arena', 'https://games.cdn.famobi.com/html5games/c/cars-arena/v010/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=bfca421b-0e9a-491b-8840-da277bda1aa4&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=920')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0500,#4a1500);">🏎️</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Cars Arena</div>
-        <div class="game-desc">Course arcade — évite les obstacles !</div>
-        <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('💣 Démineur', 'https://idev.games/embed/minesweeper-classic')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a1a0a,#3a3a1a);">💣</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Démineur</div>
-        <div class="game-desc">Trouve toutes les mines sans exploser.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="action" onclick="openGame('🧱 Casse-Briques', 'https://idev.games/embed/arcanoid-acuarium')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#001a1a,#004a4a);">🧱</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Casse-Briques</div>
-        <div class="game-desc">Détruis toutes les briques avec la balle.</div>
-        <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="strategie" onclick="openGame('🧟 Zombie Defense', 'https://idev.games/embed/zombie-tower-defense-z-sector')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a0a,#1a3a0a);">🧟</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Zombie Defense</div>
-        <div class="game-desc">Construis ta tour et résiste aux zombies.</div>
-        <div class="game-meta"><span class="game-tag tag-strat">Stratégie</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('🧩 Domino Tiler', 'https://idev.games/embed/domino-tiler')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a1a,#3a1a3a);">🧩</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Domino Tiler</div>
-        <div class="game-desc">Place les dominos pour remplir la grille.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="action" onclick="openGame('🧛 Vampire Land', 'https://idev.games/embed/vampire-land')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0005,#4a0015);">🧛</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Vampire Land</div>
-        <div class="game-desc">Survie dans un monde de vampires !</div>
-        <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="action" onclick="openGame('🏃 Horrible Platformer', 'https://idev.games/embed/horrible-platformer')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a1000,#3a2800);">🏃</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Horrible Platformer</div>
-        <div class="game-desc">Plateforme ultra difficile, vas jusqu'au bout !</div>
-        <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="sport" onclick="openGame('⚽ Penalty Shootout', 'https://www.htmlgames.com/uploaded/game/penalty-shootout/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#0a1a0a,#1a4a0a);">⚽</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Penalty Shootout</div>
-        <div class="game-desc">Tire les penalties et marque !</div>
-        <div class="game-meta"><span class="game-tag tag-sport">Sport</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="casual" onclick="openGame('🎯 2048', 'https://playpager.com/embed/2048/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#4a2000);">🎯</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">2048</div>
-        <div class="game-desc">Fusionne les tuiles pour atteindre 2048 !</div>
-        <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('🎨 Nonogram', 'https://www.htmlgames.com/uploaded/game/nonogram/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#001a2a,#003a5a);">🎨</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Nonogram</div>
-        <div class="game-desc">Remplis la grille selon les indices pour révéler l'image.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="casual" onclick="openGame('🫧 Bubble Shooter', 'https://www.htmlgames.com/uploaded/game/bubble-shooter-pro-2/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#001a3a,#00296e);">🫧</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Bubble Shooter</div>
-        <div class="game-desc">Explose les bulles de la même couleur !</div>
-        <div class="game-meta"><span class="game-tag tag-casual">Casual</span><span class="game-rating">★★★★★</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="reflexion" onclick="openGame('🔵 Mahjong', 'https://www.htmlgames.com/uploaded/game/mahjong-connect/index.html')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#3a1500);">🔵</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Mahjong Connect</div>
-        <div class="game-desc">Connecte les tuiles identiques pour les éliminer.</div>
-        <div class="game-meta"><span class="game-tag tag-puzzle">Réflexion</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-    <div class="game-card" data-category="action" onclick="openGame('🐉 Dragon Slayer', 'https://idev.games/embed/orius-sombr-a-games-v9-1-beta')">
-      <div class="game-thumb" style="background:linear-gradient(135deg,#1a0a00,#4a1a00);">🐉</div>
-      <button class="play-btn">▶ JOUER</button>
-      <div class="game-info">
-        <div class="game-name">Dragon Slayer</div>
-        <div class="game-desc">Combat épique contre des monstres et dragons.</div>
-        <div class="game-meta"><span class="game-tag tag-action">Action</span><span class="game-rating">★★★★☆</span></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- LEADERBOARD -->
-<div class="section">
-  <div class="section-header">
-    <div class="section-tag">// classement</div>
-    <h2 class="section-title">Top <span>joueurs</span></h2>
-  </div>
-  <div class="leaderboard">
-    <div class="lb-header">
-      <div class="lb-title">🏆 Classement de la semaine</div>
-      <div style="font-size:0.8rem; color:var(--muted);">Mis à jour en temps réel</div>
-    </div>
-    <div class="lb-row">
-      <div class="lb-rank rank-1">1</div>
-      <div class="lb-avatar">😎</div>
-      <div class="lb-name">ShadowKing<div class="lb-game">Turbo Race</div></div>
-      <div class="lb-score">98,450</div>
-    </div>
-    <div class="lb-row">
-      <div class="lb-rank rank-2">2</div>
-      <div class="lb-avatar">🦊</div>
-      <div class="lb-name">FoxGamer<div class="lb-game">Ninja Dash</div></div>
-      <div class="lb-score">87,320</div>
-    </div>
-    <div class="lb-row">
-      <div class="lb-rank rank-3">3</div>
-      <div class="lb-avatar">⚡</div>
-      <div class="lb-name">ZapQueen<div class="lb-game">Puzzle Rush</div></div>
-      <div class="lb-score">76,100</div>
-    </div>
-    <div class="lb-row">
-      <div class="lb-rank" style="color:var(--muted)">4</div>
-      <div class="lb-avatar">🐉</div>
-      <div class="lb-name">DragonFly<div class="lb-game">Snake Extreme</div></div>
-      <div class="lb-score">65,800</div>
-    </div>
-    <div class="lb-row">
-      <div class="lb-rank" style="color:var(--muted)">5</div>
-      <div class="lb-avatar">🌙</div>
-      <div class="lb-name">MoonBoy<div class="lb-game">Tower Defense</div></div>
-      <div class="lb-score">54,200</div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <div class="logo">JEUX<span style="color:var(--neon-pink);-webkit-text-fill-color:var(--neon-pink)">mini</span></div>
-  <div class="footer-links">
-    <a href="#">À propos</a>
-    <a href="#">Contact</a>
-    <a href="#">Confidentialité</a>
-    <a href="#">CGU</a>
-  </div>
-  <p>© 2026 Jeuxmini — La plateforme de mini-jeux pour ados 🎮</p>
+  <div class="footer-logo">CINEROOL</div>
+  <span>© 2025 Cinerool — Streaming Premium</span>
+  <span>Tous droits réservés</span>
 </footer>
 
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  function animCursor() {
-    cursor.style.left = mx - 6 + 'px';
-    cursor.style.top = my - 6 + 'px';
-    rx += (mx - rx) * 0.15;
-    ry += (my - ry) * 0.15;
-    ring.style.left = rx - 18 + 'px';
-    ring.style.top = ry - 18 + 'px';
-    requestAnimationFrame(animCursor);
+// ════════════════════════════════════════════
+//  DATA — Modifiez ici pour ajouter du contenu
+// ════════════════════════════════════════════
+const CATALOG = [
+  // ── FILMS ──
+  {
+    id: 0, type: "Film", title: "Dune", year: 2021, rating: 8.0,
+    genre: ["Science-Fiction", "Aventure", "Drame"],
+    duration: "2h 35min",
+    desc: "Paul Atreides doit se rendre sur la planète la plus dangereuse de l'univers pour assurer l'avenir de sa famille.",
+    poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcuveD6jSEIzLMroNEiE.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/jYEW5xZkZk2WTrdbMGAPFuBqbDc.jpg",
+    videoUrl: "", // Ajoutez l'URL de la vidéo ici
+    featured: true
+  },
+  {
+    id: 1, type: "Film", title: "Oppenheimer", year: 2023, rating: 8.9,
+    genre: ["Drame", "Thriller", "Histoire"],
+    duration: "3h 00min",
+    desc: "L'histoire de J. Robert Oppenheimer et de son rôle dans le développement de la bombe atomique.",
+    poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/fm6KqXpk3M2HVveHwCrBSSBaO0V.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 2, type: "Film", title: "Interstellar", year: 2014, rating: 8.7,
+    genre: ["Science-Fiction", "Aventure", "Drame"],
+    duration: "2h 49min",
+    desc: "Un groupe d'explorateurs voyage à travers un trou de ver dans l'espace pour assurer la survie de l'humanité.",
+    poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 3, type: "Film", title: "John Wick", year: 2014, rating: 7.4,
+    genre: ["Action", "Thriller", "Crime"],
+    duration: "1h 41min",
+    desc: "Un ex-tueur à gages cherche à se venger de ceux qui ont tué son chien, le dernier cadeau de sa femme décédée.",
+    poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/mMZRKb3NVTcBsiLJYsmtFBuQBGV.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 4, type: "Film", title: "Inception", year: 2010, rating: 8.8,
+    genre: ["Action", "Science-Fiction", "Thriller"],
+    duration: "2h 28min",
+    desc: "Un voleur qui s'infiltre dans les rêves des autres pour y voler des secrets se voit confier la mission inverse.",
+    poster: "https://image.tmdb.org/t/p/w500/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/s3TBrRGB1iav7gFOCNx3H31MoES.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 5, type: "Film", title: "The Batman", year: 2022, rating: 7.8,
+    genre: ["Action", "Crime", "Thriller"],
+    duration: "2h 56min",
+    desc: "Batman s'engage dans une enquête sur la corruption à Gotham City qui le relie à sa propre famille.",
+    poster: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 6, type: "Film", title: "Midsommar", year: 2019, rating: 7.1,
+    genre: ["Horreur", "Drame", "Thriller"],
+    duration: "2h 28min",
+    desc: "Un groupe d'amis voyage en Suède pour assister à un festival estival qui se révèle être une secte paganique.",
+    poster: "https://image.tmdb.org/t/p/w500/7LEI8ulZzO5gy9Ww2NVCrKmHeDZ.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/bSLLxB7SWJLA8Uei7y1oAhqhFQk.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 7, type: "Film", title: "Spider-Man: No Way Home", year: 2021, rating: 8.3,
+    genre: ["Action", "Aventure", "Science-Fiction"],
+    duration: "2h 28min",
+    desc: "Peter Parker demande à Doctor Strange un sort pour que tout le monde oublie qu'il est Spider-Man.",
+    poster: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/14QbnygCuTO0vl7CAFmPf1fgZfV.jpg",
+    videoUrl: "",
+    featured: false
+  },
+
+  // ── SÉRIES ──
+  {
+    id: 8, type: "Série", title: "Breaking Bad", year: 2008, rating: 9.5,
+    genre: ["Drame", "Crime", "Thriller"],
+    duration: "5 saisons",
+    desc: "Un professeur de chimie atteint d'un cancer devient fabricant de méthamphétamine pour assurer l'avenir de sa famille.",
+    poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+    videoUrl: "",
+    featured: false,
+    seasons: [
+      { num: 1, episodes: [
+        { title: "Pilot", duration: "58min" },
+        { title: "Cat's in the Bag", duration: "48min" },
+        { title: "...And the Bag's in the River", duration: "47min" },
+        { title: "Cancer Man", duration: "48min" },
+        { title: "Gray Matter", duration: "48min" },
+        { title: "Crazy Handful of Nothin'", duration: "47min" },
+        { title: "A No-Rough-Stuff-Type Deal", duration: "47min" },
+      ]},
+      { num: 2, episodes: [
+        { title: "Seven Thirty-Seven", duration: "47min" },
+        { title: "Down", duration: "47min" },
+        { title: "Bit by a Dead Bee", duration: "47min" },
+        { title: "Down", duration: "47min" },
+        { title: "Breakage", duration: "47min" },
+      ]},
+    ]
+  },
+  {
+    id: 9, type: "Série", title: "Stranger Things", year: 2016, rating: 8.7,
+    genre: ["Science-Fiction", "Horreur", "Drame"],
+    duration: "4 saisons",
+    desc: "Des enfants affrontent des forces surnaturelles et des expériences secrètes du gouvernement dans leur ville.",
+    poster: "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg",
+    videoUrl: "",
+    featured: false,
+    seasons: [
+      { num: 1, episodes: [
+        { title: "The Vanishing of Will Byers", duration: "47min" },
+        { title: "The Weirdo on Maple Street", duration: "55min" },
+        { title: "Holly, Jolly", duration: "51min" },
+        { title: "The Body", duration: "55min" },
+        { title: "The Flea and the Acrobat", duration: "57min" },
+        { title: "The Monster", duration: "46min" },
+        { title: "The Bathtub", duration: "41min" },
+        { title: "The Upside Down", duration: "52min" },
+      ]},
+      { num: 2, episodes: [
+        { title: "MADMAX", duration: "48min" },
+        { title: "Trick or Treat, Freak", duration: "56min" },
+        { title: "The Pollywog", duration: "51min" },
+        { title: "Will the Wise", duration: "46min" },
+        { title: "Dig Dug", duration: "55min" },
+      ]},
+    ]
+  },
+  {
+    id: 10, type: "Série", title: "The Last of Us", year: 2023, rating: 8.8,
+    genre: ["Drame", "Action", "Science-Fiction"],
+    duration: "2 saisons",
+    desc: "Joel, un contrebandier endurci, est chargé de faire passer Ellie, une adolescente, en dehors d'une zone de quarantaine.",
+    poster: "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/9HSqK4vBVWFILXmHQSFaGHcuqak.jpg",
+    videoUrl: "",
+    featured: false,
+    seasons: [
+      { num: 1, episodes: [
+        { title: "When You're Lost in the Darkness", duration: "81min" },
+        { title: "Infected", duration: "55min" },
+        { title: "Long, Long Time", duration: "76min" },
+        { title: "Please Hold to My Hand", duration: "45min" },
+        { title: "Endure and Survive", duration: "59min" },
+        { title: "Kin", duration: "59min" },
+        { title: "Left Behind", duration: "43min" },
+        { title: "When We Are in Need", duration: "49min" },
+        { title: "Look for the Light", duration: "43min" },
+      ]},
+    ]
+  },
+  {
+    id: 11, type: "Série", title: "Severance", year: 2022, rating: 8.7,
+    genre: ["Thriller", "Science-Fiction", "Drame"],
+    duration: "2 saisons",
+    desc: "Des employés d'une multinationale acceptent une procédure qui bifurque chirurgicalement leurs souvenirs professionnels et personnels.",
+    poster: "https://image.tmdb.org/t/p/w500/lMQqk0AzHyFnRNkMPuqjg5jSwvC.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/rN6AxwmE0j0aHHh91rl8OQIwuDu.jpg",
+    videoUrl: "",
+    featured: false,
+    seasons: [
+      { num: 1, episodes: [
+        { title: "Good News About Hell", duration: "57min" },
+        { title: "Half Loop", duration: "49min" },
+        { title: "In Perpetuity", duration: "48min" },
+        { title: "The You You Are", duration: "49min" },
+        { title: "The Grim Barbarity of Optics and Design", duration: "46min" },
+        { title: "Hide and Seek", duration: "47min" },
+        { title: "Defiant Jazz", duration: "50min" },
+        { title: "What's for Dinner?", duration: "50min" },
+        { title: "The We We Are", duration: "60min" },
+      ]},
+    ]
+  },
+  {
+    id: 12, type: "Film", title: "Everything Everywhere All at Once", year: 2022, rating: 8.0,
+    genre: ["Action", "Science-Fiction", "Aventure"],
+    duration: "2h 19min",
+    desc: "Une immigrante sino-américaine est emportée dans une aventure extraordinaire où elle seule peut sauver le monde.",
+    poster: "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/ss0Os3uWJfQAENILHZUdX8Tt1OC.jpg",
+    videoUrl: "",
+    featured: false
+  },
+  {
+    id: 13, type: "Série", title: "Dark", year: 2017, rating: 8.8,
+    genre: ["Thriller", "Science-Fiction", "Drame"],
+    duration: "3 saisons",
+    desc: "Une série de disparitions d'enfants révèle une connexion entre quatre familles qui s'étend sur plusieurs générations.",
+    poster: "https://image.tmdb.org/t/p/w500/apbrbWs5aANUaR1Ks6fZpKMUlhO.jpg",
+    backdrop: "https://image.tmdb.org/t/p/original/7PhXL4YKMT3V2tWlXoYLPYhCcS5.jpg",
+    videoUrl: "",
+    featured: false,
+    seasons: [
+      { num: 1, episodes: [
+        { title: "Secrets", duration: "51min" },
+        { title: "Lies", duration: "52min" },
+        { title: "Past and Present", duration: "52min" },
+        { title: "Double Lives", duration: "49min" },
+        { title: "Truths", duration: "51min" },
+        { title: "Sic Mundus Creatus Est", duration: "53min" },
+        { title: "Crossroads", duration: "53min" },
+        { title: "As You Sow, so You Shall Reap", duration: "55min" },
+        { title: "Everything Is Now", duration: "53min" },
+        { title: "Alpha and Omega", duration: "60min" },
+      ]},
+    ]
+  },
+];
+
+// ════════════════════════════════════════════
+//  SECTIONS à afficher
+// ════════════════════════════════════════════
+const SECTIONS_CONFIG = [
+  { title: "🔥 TENDANCES", filter: c => c.rating >= 8.5 },
+  { title: "🎬 FILMS", filter: c => c.type === "Film" },
+  { title: "📺 SÉRIES", filter: c => c.type === "Série" },
+  { title: "⚡ ACTION & THRILLER", filter: c => c.genre.some(g => ["Action","Thriller"].includes(g)) },
+  { title: "🚀 SCIENCE-FICTION", filter: c => c.genre.includes("Science-Fiction") },
+  { title: "🎭 DRAME", filter: c => c.genre.includes("Drame") },
+];
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let currentFilter = 'Tous';
+let currentSearch = '';
+let currentModalItem = null;
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  setHero();
+  renderSections();
+});
+
+function setHero() {
+  const featured = CATALOG.find(c => c.featured) || CATALOG[0];
+  document.getElementById('hero-title').textContent = featured.title;
+  document.getElementById('hero-rating').textContent = `★ ${featured.rating}`;
+  document.getElementById('hero-year').textContent = featured.year;
+  document.getElementById('hero-genre').textContent = featured.genre.slice(0,2).join(' · ');
+  document.getElementById('hero-duration').textContent = featured.duration;
+  document.getElementById('hero-desc').textContent = featured.desc;
+  if (featured.backdrop) {
+    document.getElementById('hero-bg-img').style.backgroundImage = `url(${featured.backdrop})`;
   }
-  animCursor();
+  document.getElementById('hero-play-btn').onclick = () => openModal(featured.id);
+  document.getElementById('hero-info-btn').onclick = () => openModal(featured.id);
+}
 
-  // Open game in modal
-  function openGame(title, url) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('game-iframe').src = url;
-    const modal = document.getElementById('game-modal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+// ════════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════════
+function getFilteredCatalog() {
+  return CATALOG.filter(item => {
+    const matchesGenre =
+      currentFilter === 'Tous' ||
+      currentFilter === 'Film' ? item.type === 'Film' :
+      currentFilter === 'Série' ? item.type === 'Série' :
+      item.genre.includes(currentFilter);
+    const q = currentSearch.toLowerCase();
+    const matchesSearch = !q ||
+      item.title.toLowerCase().includes(q) ||
+      item.genre.some(g => g.toLowerCase().includes(q)) ||
+      item.desc.toLowerCase().includes(q);
+    return matchesGenre && matchesSearch;
+  });
+}
+
+function renderSections() {
+  const container = document.getElementById('sections-container');
+  const filtered = getFilteredCatalog();
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    document.getElementById('no-results').style.display = 'block';
+    return;
+  }
+  document.getElementById('no-results').style.display = 'none';
+
+  if (currentSearch || currentFilter !== 'Tous') {
+    // Mode recherche/filtre : une seule section
+    container.innerHTML = '';
+    const section = buildSection('RÉSULTATS', filtered);
+    if (section) container.appendChild(section);
+    return;
   }
 
-  function closeGame() {
-    document.getElementById('game-modal').style.display = 'none';
-    document.getElementById('game-iframe').src = '';
-    document.body.style.overflow = '';
+  container.innerHTML = '';
+  SECTIONS_CONFIG.forEach(cfg => {
+    const items = CATALOG.filter(cfg.filter);
+    if (items.length === 0) return;
+    const section = buildSection(cfg.title, items);
+    if (section) container.appendChild(section);
+  });
+}
+
+function buildSection(title, items) {
+  if (!items.length) return null;
+  const sec = document.createElement('div');
+  sec.className = 'section';
+  sec.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">${title}</div>
+      <div class="see-all">Voir tout <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></div>
+    </div>
+    <div class="cards-row">${items.map(buildCard).join('')}</div>
+  `;
+  return sec;
+}
+
+function buildCard(item) {
+  const genreStr = item.genre.slice(0,2).join(' · ');
+  return `
+  <div class="card" onclick="openModal(${item.id})">
+    <div class="card-poster" style="background-image:url(${item.poster || ''})">
+      <div class="card-type-badge">${item.type}</div>
+      <div class="card-overlay">
+        <div class="card-play-btn">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">${item.title}</div>
+      <div class="card-sub">
+        <span class="card-rating">★ ${item.rating}</span>
+        <span>·</span>
+        <span>${item.year}</span>
+        <span>·</span>
+        <span>${genreStr}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════
+//  FILTERS
+// ════════════════════════════════════════════
+function filterGenre(genre) {
+  currentFilter = genre;
+  currentSearch = '';
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('.genre-pill').forEach(p => {
+    p.classList.toggle('active', p.textContent.trim() === genre || (genre === 'Tous' && p.textContent.trim() === 'Tous'));
+  });
+  renderSections();
+}
+
+function handleSearch(val) {
+  currentSearch = val;
+  currentFilter = 'Tous';
+  document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('.genre-pill')?.classList.add('active');
+  renderSections();
+}
+
+function resetFilters() {
+  currentFilter = 'Tous';
+  currentSearch = '';
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('.genre-pill').forEach((p, i) => p.classList.toggle('active', i === 0));
+  renderSections();
+}
+
+// ════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════
+function openModal(id) {
+  const item = CATALOG.find(c => c.id === id);
+  if (!item) return;
+  currentModalItem = item;
+
+  document.getElementById('modal-title').textContent = item.title;
+  document.getElementById('modal-desc').textContent = item.desc;
+
+  // Meta tags
+  const metaEl = document.getElementById('modal-meta');
+  metaEl.innerHTML = `
+    <span class="modal-tag highlight">★ ${item.rating}</span>
+    <span class="modal-tag">${item.year}</span>
+    <span class="modal-tag">${item.type}</span>
+    <span class="modal-tag">${item.duration}</span>
+    ${item.genre.map(g => `<span class="modal-tag">${g}</span>`).join('')}
+  `;
+
+  // Player reset
+  const ph = document.getElementById('player-placeholder');
+  ph.style.display = 'flex';
+  const existingIframe = document.getElementById('modal-player').querySelector('iframe');
+  if (existingIframe) existingIframe.remove();
+
+  document.getElementById('player-msg').textContent =
+    item.videoUrl ? 'Cliquez pour lancer la lecture' : 'Vidéo à configurer — Ajoutez l\'URL dans CATALOG';
+
+  // Episodes
+  const epSection = document.getElementById('modal-episodes');
+  if (item.seasons && item.seasons.length > 0) {
+    epSection.style.display = 'block';
+    const sel = document.getElementById('season-select');
+    sel.innerHTML = item.seasons.map((s, i) => `<option value="${i}">Saison ${s.num}</option>`).join('');
+    renderEpisodes();
+  } else {
+    epSection.style.display = 'none';
   }
 
-  // Close modal on background click
-  document.getElementById('game-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeGame();
-  });
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
-  // Category filter
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.getAttribute('data-cat');
-      document.querySelectorAll('.game-card').forEach(card => {
-        if (cat === 'tous' || card.getAttribute('data-category') === cat) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
+function renderEpisodes() {
+  const item = currentModalItem;
+  if (!item?.seasons) return;
+  const si = parseInt(document.getElementById('season-select').value);
+  const season = item.seasons[si];
+  const list = document.getElementById('ep-list');
+  list.innerHTML = season.episodes.map((ep, i) => `
+    <div class="ep-item" onclick="startPlay()">
+      <div class="ep-num">${i+1}</div>
+      <div class="ep-info">
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-dur">${ep.duration}</div>
+      </div>
+      <div class="ep-play">
+        <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+  `).join('');
+}
 
-  // Scroll reveal
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
+function startPlay() {
+  const item = currentModalItem;
+  if (!item) return;
+  const ph = document.getElementById('player-placeholder');
 
-  document.querySelectorAll('.game-card, .featured-card, .leaderboard').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-  });
+  if (!item.videoUrl) {
+    document.getElementById('player-msg').textContent = '⚠️ Aucune URL vidéo configurée pour ce titre.';
+    return;
+  }
+
+  ph.style.display = 'none';
+  const player = document.getElementById('modal-player');
+  const iframe = document.createElement('iframe');
+  iframe.src = item.videoUrl;
+  iframe.allowFullscreen = true;
+  iframe.allow = 'autoplay; fullscreen';
+  player.appendChild(iframe);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  const iframe = document.getElementById('modal-player').querySelector('iframe');
+  if (iframe) iframe.remove();
+  document.getElementById('player-placeholder').style.display = 'flex';
+  currentModalItem = null;
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 </script>
+
 </body>
 </html>
